@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Files</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>ARCHIVE FILES</h1>
+
+  <div class="file-box">
+    <h2>FILE #001</h2>
+    <p>
+      Research Station ECHO was shut down in 1997 after a complete communications blackout.
+    </p>
+  </div>
+
+  <div class="file-box">
+    <h2>FILE #002</h2>
+    <p>
+      Witnesses reported hearing voices through disconnected radios.
+    </p>
+  </div>
+
+  <div class="file-box secret" onclick="revealSecret()">
+    CLICK TO DECRYPT
+  </div>
+
+  <p id="secret-message" class="hidden">
+    "IT IS STILL INSIDE THE NETWORK."
+  </p>
+
+  <br>
+  <a href="index.html">← Return</a>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
