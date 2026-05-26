@@ -14,7 +14,7 @@ padding-top:100px;
 }
 
 .glitch{
-font-size:80px;
+font-size:90px;
 animation:flicker 2s infinite;
 }
 
@@ -60,8 +60,8 @@ rgba(255,255,255,0.03) 3px
 
 @keyframes flicker{
 0%{opacity:1;}
-50%{opacity:0.7;}
-52%{opacity:0.3;}
+50%{opacity:0.5;}
+52%{opacity:0.2;}
 54%{opacity:1;}
 100%{opacity:1;}
 }
