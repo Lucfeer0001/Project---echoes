@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACCESS RESTRICTED</title>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background: #0a0a0a;
+  color: #ff0000;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  text-align: center;
+  z-index: 10;
+  position: relative;
+}
+
+.eyes {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.eye {
+  position: absolute;
+  width: 80px;
+  height: 40px;
+  background: radial-gradient(ellipse, #fff 30%, #000 70%);
+  border-radius: 50%;
+  animation: blink 4s infinite;
+}
+
+.eye::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #000;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #ff0000, inset 0 0 5px #ff0000;
+}
+
+.eye-top-left { top: 5%; left: 3%; }
+.eye-top-right { top: 5%; right: 3%; }
+.eye-bottom-left { bottom: 5%; left: 3%; }
+.eye-bottom-right { bottom: 5%; right: 3%; }
+
+@keyframes blink {
+  0%, 45%, 55%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+}
+
+.welcome {
+  font-size: 48px;
+  color: #8b0000;
+  text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+  animation: pulse 2s infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #4a0000;
+  margin-bottom: 40px;
+  letter-spacing: 3px;
+}
+
+.input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.code-input {
+  background: transparent;
+  border: 2px solid #8b0000;
+  color: #ff0000;
+  padding: 15px 25px;
+  font-size: 20px;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  width: 300px;
+  letter-spacing: 2px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.code-input::placeholder {
+  color: #4a0000;
+}
+
+.code-input:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.enter-btn {
+  background: #000;
+  border: 2px solid #8b0000;
+  color: #ff0000;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-family: 'Courier New', monospace;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.enter-btn:hover {
+  background: #8b0000;
+  color: #000;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+}
+
+.error-msg {
+  color: #ff0000;
+  font-size: 16px;
+  margin-top: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.error-msg.show {
+  opacity: 1;
+}
+
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+  z-index: 5;
+}
+
+.flicker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: rgba(255, 0, 0, 0.02);
+  animation: flicker-bg 0.1s infinite;
+  z-index: 2;
+}
+
+@keyframes flicker-bg {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="eyes">
+  <div class="eye eye-top-left"></div>
+  <div class="eye eye-top-right"></div>
+  <div class="eye eye-bottom-left"></div>
+  <div class="eye eye-bottom-right"></div>
+</div>
+
+<div class="flicker-overlay"></div>
+<div class="vignette"></div>
+
+<div class="container">
+  <h1 class="welcome">WELCOME, USER</h1>
+  <p class="subtitle">WE'VE BEEN WAITING FOR YOU</p>
+
+  <p style="color: #660000; font-size: 16px; margin-top: 40px;">ENTER THE CODE</p>
+
+  <div class="input-container">
+    <input type="text" class="code-input" id="codeInput" placeholder="..." autocomplete="off">
+    <button class="enter-btn" onclick="checkCode()">ENTER</button>
+  </div>
+
+  <p class="error-msg" id="errorMsg">INCORRECT. THEY ARE WATCHING.</p>
+</div>
+
+<audio id="bgAudio" loop>
+  <source src="https://assets.mixkit.co/active_storage/sfx/2475/2475-preview.mp3" type="audio/mpeg">
+</source>
+</audio>
+
+<script>
+const audio = document.getElementById('bgAudio');
+audio.volume = 0.3;
+
+document.addEventListener('click', () => {
+  audio.play().catch(e => {});
+}, { once: true });
+
+document.getElementById('codeInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    checkCode();
+  }
+});
+
+function checkCode() {
+  const code = document.getElementById('codeInput').value.toLowerCase().trim();
+  const errorMsg = document.getElementById('errorMsg');
+
+  if (code === 'codenameshishimanu') {
+    document.body.style.animation = 'flash 0.5s';
+    setTimeout(() => {
+      window.location.href = 'database.html';
+    }, 500);
+  } else {
+    errorMsg.classList.add('show');
+    document.getElementById('codeInput').value = '';
+    setTimeout(() => {
+      errorMsg.classList.remove('show');
+    }, 3000);
+  }
+}
+
+const style = document.createElement('style');
+style.textContent = '@keyframes flash { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(3); } }';
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
